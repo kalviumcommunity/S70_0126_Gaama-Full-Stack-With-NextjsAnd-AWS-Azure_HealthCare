@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
+import { useTheme } from "@/context/ThemeContext";
 import {
     Home,
     Users,
@@ -19,8 +20,9 @@ import { Button } from "@/components/ui/button";
 export function Sidebar() {
     const pathname = usePathname();
     const { user, logout } = useAuth();
+    const { effectiveTheme } = useTheme();
 
-    const isDoctor = user?.role === 'DOCTOR';
+    const isDoctor = user?.role === "DOCTOR";
 
     const navItems = [
         { label: "Overview", href: "/dashboard", icon: Home, show: true },
@@ -32,19 +34,43 @@ export function Sidebar() {
     ];
 
     return (
-        <div className="flex h-full max-h-screen flex-col gap-2 bg-white/80 backdrop-blur-xl border-r border-gray-100 shadow-sm">
-            <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6 bg-white/50">
+        <div
+            className={cn(
+                "flex h-full max-h-screen flex-col gap-2 border-r shadow-sm transition-colors duration-200",
+                effectiveTheme === "dark"
+                    ? "bg-gray-900/80 border-gray-800"
+                    : "bg-white/80 border-gray-100"
+            )}
+        >
+            <div
+                className={cn(
+                    "flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6",
+                    effectiveTheme === "dark"
+                        ? "bg-gray-800/50 border-gray-800"
+                        : "bg-white/50 border-gray-100"
+                )}
+            >
                 <Link href="/" className="flex items-center gap-2 font-semibold">
                     <div className="bg-gradient-to-tr from-blue-600 to-indigo-600 p-1.5 rounded-lg shadow-lg shadow-blue-600/20">
                         <Activity className="h-5 w-5 text-white" />
                     </div>
-                    <span className="text-gray-900 tracking-tight text-lg">RuralHealth</span>
+                    <span
+                        className={cn(
+                            "tracking-tight text-lg font-bold",
+                            effectiveTheme === "dark" ? "text-gray-100" : "text-gray-900"
+                        )}
+                    >
+                        RuralHealth
+                    </span>
                 </Link>
             </div>
+
+            {/* ===== DASHBOARD NAVIGATION ===== */}
             <div className="flex-1 overflow-auto py-4">
                 <nav className="grid items-start px-3 text-sm font-medium lg:px-4 space-y-1">
                     {navItems.filter(item => item.show).map((item, index) => {
                         const isActive = pathname === item.href;
+
                         return (
                             <Link
                                 key={index}
@@ -52,27 +78,57 @@ export function Sidebar() {
                                 className={cn(
                                     "flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200 group",
                                     isActive
-                                        ? "bg-blue-600 text-white shadow-md shadow-blue-600/25"
-                                        : "text-gray-500 hover:text-blue-600 hover:bg-blue-50"
+                                        ? "bg-blue-600 text-white shadow-md shadow-blue-600/25 ring-2 ring-blue-300/30"
+                                        : "text-gray-500 hover:text-blue-600 hover:bg-blue-50 dark:text-gray-400 dark:hover:text-blue-400 dark:hover:bg-gray-800"
                                 )}
                             >
-                                <item.icon className={cn("h-4 w-4 transition-transform group-hover:scale-110", isActive ? "text-white" : "text-gray-400 group-hover:text-blue-600")} />
+                                <item.icon
+                                    className={cn(
+                                        "h-4 w-4 transition-transform group-hover:scale-110",
+                                        isActive
+                                            ? "text-white"
+                                            : "text-gray-400 group-hover:text-blue-600 dark:text-gray-500 dark:group-hover:text-blue-400"
+                                    )}
+                                />
                                 {item.label}
                             </Link>
-                        )
+                        );
                     })}
                 </nav>
             </div>
-            <div className="mt-auto p-4 border-t border-gray-100 bg-gray-50/50">
+
+            <div
+                className={cn(
+                    "mt-auto p-4 border-t",
+                    effectiveTheme === "dark"
+                        ? "border-gray-800 bg-gray-800/50"
+                        : "border-gray-100 bg-gray-50/50"
+                )}
+            >
                 <div className="flex items-center gap-3 mb-4 px-2">
                     <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 border-2 border-white shadow-sm flex items-center justify-center text-blue-700 font-bold">
                         {user?.name?.[0] || "U"}
                     </div>
                     <div className="overflow-hidden">
-                        <p className="text-sm font-semibold text-gray-900 truncate">{user?.name}</p>
-                        <p className="text-xs text-gray-500 truncate capitalize">{user?.role?.toLowerCase()}</p>
+                        <p
+                            className={cn(
+                                "text-sm font-semibold truncate",
+                                effectiveTheme === "dark" ? "text-gray-100" : "text-gray-900"
+                            )}
+                        >
+                            {user?.name}
+                        </p>
+                        <p
+                            className={cn(
+                                "text-xs truncate capitalize",
+                                effectiveTheme === "dark" ? "text-gray-400" : "text-gray-500"
+                            )}
+                        >
+                            {user?.role?.toLowerCase()}
+                        </p>
                     </div>
                 </div>
+
                 <Button
                     variant="ghost"
                     onClick={logout}
