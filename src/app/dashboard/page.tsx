@@ -52,7 +52,7 @@ export default function DashboardPage() {
             const reportData = {
                 generatedAt: new Date().toISOString(),
                 user: user?.name,
-                stats: stats,
+                stats,
                 summary: isDoctor
                     ? `Total Patients: ${stats.totalPatients}, Records: ${stats.medicalRecords}, Appointments: ${stats.appointments}`
                     : `My Records: ${stats.medicalRecords}, Appointments: ${stats.appointments}, Active Prescriptions: ${stats.activePrescriptions}`
@@ -64,9 +64,7 @@ export default function DashboardPage() {
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = url;
-            a.download = `health-report-${new Date()
-                .toISOString()
-                .split("T")[0]}.json`;
+            a.download = `health-report-${new Date().toISOString().split("T")[0]}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -74,6 +72,9 @@ export default function DashboardPage() {
             setDownloading(false);
         }, 1000);
     };
+
+    const cardClass =
+        "bg-white/80 backdrop-blur-xl shadow-lg border-none hover:shadow-xl transition-shadow";
 
     return (
         <div className="flex flex-col gap-8">
@@ -120,42 +121,35 @@ export default function DashboardPage() {
                 )}
             </div>
 
-            {/* Stats Grid */}
+            {/* ===== STATS GRID ===== */}
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                 {isDoctor && (
-                    <Card className="bg-white/80 backdrop-blur-xl shadow-lg border-none">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium text-gray-500">
+                    <Card className={cardClass}>
+                        <CardHeader className="flex flex-row items-center justify-between pb-2">
+                            <CardTitle className="text-sm text-gray-500">
                                 Total Patients
                             </CardTitle>
-                            <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
-                                <Users className="h-4 w-4 text-blue-600" />
-                            </div>
+                            <Users className="h-4 w-4 text-blue-600" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold text-gray-900">
-                                {stats.totalPatients}
-                            </div>
+                            <div className="text-2xl font-bold">{stats.totalPatients}</div>
                             <p className="text-xs text-green-600 flex items-center mt-1">
-                                <ArrowUpRight className="h-3 w-3 mr-1" />
-                                +2 from last month
+                                <ArrowUpRight className="h-3 w-3 mr-1" /> +2 from last month
                             </p>
                         </CardContent>
                     </Card>
                 )}
 
                 {isPatient && (
-                    <Card className="bg-white/80 backdrop-blur-xl shadow-lg border-none">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium text-gray-500">
+                    <Card className={cardClass}>
+                        <CardHeader className="flex flex-row items-center justify-between pb-2">
+                            <CardTitle className="text-sm text-gray-500">
                                 Health Score
                             </CardTitle>
-                            <div className="h-8 w-8 rounded-full bg-pink-100 flex items-center justify-center">
-                                <Heart className="h-4 w-4 text-pink-600" />
-                            </div>
+                            <Heart className="h-4 w-4 text-pink-600" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold text-gray-900">Good</div>
+                            <div className="text-2xl font-bold">Good</div>
                             <p className="text-xs text-gray-500 mt-1">
                                 Based on recent checkups
                             </p>
@@ -163,19 +157,15 @@ export default function DashboardPage() {
                     </Card>
                 )}
 
-                <Card className="bg-white/80 backdrop-blur-xl shadow-lg border-none">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-gray-500">
+                <Card className={cardClass}>
+                    <CardHeader className="flex flex-row items-center justify-between pb-2">
+                        <CardTitle className="text-sm text-gray-500">
                             {isDoctor ? "Medical Records" : "My Records"}
                         </CardTitle>
-                        <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center">
-                            <FileText className="h-4 w-4 text-indigo-600" />
-                        </div>
+                        <FileText className="h-4 w-4 text-indigo-600" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-gray-900">
-                            {stats.medicalRecords}
-                        </div>
+                        <div className="text-2xl font-bold">{stats.medicalRecords}</div>
                         <p className="text-xs text-green-600 flex items-center mt-1">
                             <ArrowUpRight className="h-3 w-3 mr-1" />
                             {isDoctor ? "+1 new this week" : "All time records"}
@@ -183,83 +173,60 @@ export default function DashboardPage() {
                     </CardContent>
                 </Card>
 
-                <Card className="bg-white/80 backdrop-blur-xl shadow-lg border-none">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-gray-500">
+                <Card className={cardClass}>
+                    <CardHeader className="flex flex-row items-center justify-between pb-2">
+                        <CardTitle className="text-sm text-gray-500">
                             Appointments
                         </CardTitle>
-                        <div className="h-8 w-8 rounded-full bg-orange-100 flex items-center justify-center">
-                            <Calendar className="h-4 w-4 text-orange-600" />
-                        </div>
+                        <Calendar className="h-4 w-4 text-orange-600" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-gray-900">
-                            {stats.appointments}
-                        </div>
+                        <div className="text-2xl font-bold">{stats.appointments}</div>
                         <p className="text-xs text-gray-500 mt-1">
                             {isDoctor ? "Today's schedule" : "Upcoming visits"}
                         </p>
                     </CardContent>
                 </Card>
 
-                <Card className="bg-white/80 backdrop-blur-xl shadow-lg border-none">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-gray-500">
+                <Card className={cardClass}>
+                    <CardHeader className="flex flex-row items-center justify-between pb-2">
+                        <CardTitle className="text-sm text-gray-500">
                             Active Prescriptions
                         </CardTitle>
-                        <div className="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center">
-                            <Activity className="h-4 w-4 text-emerald-600" />
-                        </div>
+                        <Activity className="h-4 w-4 text-emerald-600" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-gray-900">
+                        <div className="text-2xl font-bold">
                             {stats.activePrescriptions}
                         </div>
-                        <p className="text-xs text-gray-500 mt-1">
-                            Currently active
-                        </p>
+                        <p className="text-xs text-gray-500 mt-1">Currently active</p>
                     </CardContent>
                 </Card>
             </div>
 
-            {/* System Status Modal */}
+            {/* ===== SYSTEM STATUS MODAL ===== */}
             {showSystemStatus && (
                 <div
                     className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
                     onClick={() => setShowSystemStatus(false)}
                 >
                     <div
-                        className="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-2xl"
+                        className="bg-white rounded-lg p-6 max-w-md w-full shadow-2xl"
                         onClick={e => e.stopPropagation()}
                     >
-                        <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-xl font-bold text-gray-900">
-                                System Status
-                            </h2>
-                            <button
-                                onClick={() => setShowSystemStatus(false)}
-                                className="text-gray-400 hover:text-gray-600"
-                            >
-                                ×
-                            </button>
-                        </div>
+                        <h2 className="text-xl font-bold mb-4">System Status</h2>
 
-                        <div className="space-y-4">
-                            {["Database", "API Server", "Authentication"].map((item, i) => (
+                        <div className="space-y-3">
+                            {["Database", "API Server", "Authentication"].map(item => (
                                 <div
-                                    key={i}
+                                    key={item}
                                     className="flex items-center justify-between p-3 bg-green-50 rounded-lg"
                                 >
-                                    <div className="flex items-center gap-3">
-                                        <CheckCircle2 className="h-5 w-5 text-green-600" />
-                                        <div>
-                                            <p className="font-medium text-gray-900">{item}</p>
-                                            <p className="text-sm text-gray-500">Operational</p>
-                                        </div>
+                                    <div className="flex items-center gap-2">
+                                        <CheckCircle2 className="h-4 w-4 text-green-600" />
+                                        <span className="font-medium">{item}</span>
                                     </div>
-                                    <span className="text-green-600 font-semibold">
-                                        100%
-                                    </span>
+                                    <span className="text-green-600 font-semibold">100%</span>
                                 </div>
                             ))}
                         </div>
