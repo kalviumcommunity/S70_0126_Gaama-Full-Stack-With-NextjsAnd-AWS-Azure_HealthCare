@@ -214,7 +214,12 @@ export default function DashboardPage() {
                         className="bg-white rounded-lg p-6 max-w-md w-full shadow-2xl"
                         onClick={e => e.stopPropagation()}
                     >
-                        <h2 className="text-xl font-bold mb-4">System Status</h2>
+                        {/* 🔽 CHANGE STARTS HERE */}
+                        <h2 className="text-xl font-bold mb-1">System Status</h2>
+                        <p className="text-sm text-gray-500 mb-4">
+                            Overview of current system health
+                        </p>
+                        {/* 🔼 CHANGE ENDS HERE */}
 
                         <div className="space-y-3">
                             {["Database", "API Server", "Authentication"].map(item => (
